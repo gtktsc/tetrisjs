@@ -5,15 +5,20 @@
         context = canvas.getContext('2d');
 
     var head =[];
-    var color = Math.floor(Math.random() * (4));
+    var color = "#"+((1<<24)*Math.random()|0).toString(16);
     var backgroundColor = "silver";
     var shape;
     var tileX=[];
     var tileOccupied=[];
     var animation;
     var snakeSize = 40;
-    var sumX =Math.floor(window.innerWidth / snakeSize);
-    var sumY =Math.floor(window.innerHeight / snakeSize);
+    var canvasWidth = document.getElementById('canvas-wrapper').offsetWidth;
+    var canvasHeight = document.getElementById('canvas-wrapper').offsetHeight;
+    var sumX =Math.floor(canvasWidth / snakeSize);
+    var sumY =Math.floor(canvasHeight  / snakeSize);
+
+
+
     
     function restart(){
         setShape();
@@ -43,22 +48,22 @@
         switch(shape){
             case 0:
                 head=[];
-                head[0] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[0] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[1] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[1] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[2] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[2] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 snakeSize,
                 color ,
                 snakeSize ,
                 -1);
-                head[3] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize*2,
+                head[3] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize*2,
                 +snakeSize,
                 color ,
                 snakeSize ,
@@ -66,17 +71,17 @@
                 break;
             case 1:
                 head=[];
-                head[0] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[0] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[1] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[1] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[2] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+ snakeSize*2,
+                head[2] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize + snakeSize*2,
                 0,
                 color ,
                 snakeSize ,
@@ -84,22 +89,22 @@
             break;
             case 2:
                 head=[];
-                head[0] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[0] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[1] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[1] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[2] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+ snakeSize*2,
+                head[2] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize + snakeSize*2,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[3] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[3] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 snakeSize,
                 color ,
                 snakeSize ,
@@ -107,22 +112,22 @@
                 break;
             case 3:
                 head=[];
-                head[0] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[0] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[1] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[1] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[2] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+ snakeSize*2,
+                head[2] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize + snakeSize*2,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[3] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[3] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 snakeSize,
                 color ,
                 snakeSize ,
@@ -130,22 +135,22 @@
                 break;
             case 4:
                 head=[];
-                head[0] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[0] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[1] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[1] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 0,
                 color ,
                 snakeSize ,
                 -1);
-                head[2] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2,
+                head[2] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize ,
                 snakeSize,
                 color ,
                 snakeSize ,
                 -1);
-                head[3] = new Rectangle ( (Math.floor(window.innerWidth / snakeSize)/2) * snakeSize -snakeSize/2+snakeSize,
+                head[3] = new Rectangle ( (Math.floor(canvasWidth / snakeSize)/2) * snakeSize +snakeSize,
                 snakeSize,
                 color ,
                 snakeSize ,
@@ -157,16 +162,16 @@
 
 
     function resizeCanvas() {
-        sumX =Math.floor(window.innerWidth / snakeSize);
-        sumY =Math.floor(window.innerHeight / snakeSize);
+        sumX =Math.floor(canvasWidth / snakeSize);
+        sumY =Math.floor(canvasHeight / snakeSize);
         canvas.width = sumX * snakeSize;
         canvas.height = sumY * snakeSize;
     };
 
     function draw() {
         context.beginPath();
-        context.clearRect(0 , 0 , window.innerWidth , window.innerHeight);
-        context.rect(0 , 0 , window.innerWidth , window.innerHeight);
+        context.clearRect(0 , 0 , canvasWidth , canvasHeight);
+        context.rect(0 , 0 , canvasWidth , canvasHeight);
         context.fillStyle = backgroundColor;
         context.fill();
         context.closePath();
@@ -178,7 +183,7 @@
             tileX[nr].draw();
         };
         for(var tile in head){
-            if(head[tile]!=undefined && (head[tile].y > window.innerHeight-head[tile].size * 2 || touching(head[tile])  )){
+            if(head[tile]!=undefined && (head[tile].y > canvasHeight-head[tile].size * 2 || touching(head[tile])  )){
                 stop();
             };
         }
@@ -204,7 +209,7 @@
             case 83: // S
             case 40: // down
             for(var tile in head){
-                head[tile].direction !== "up" ? head[tile].direction = "down" : head[tile].directory=head[tile].directory;
+                head[tile].rotation +=1;
             };
             break;
         };
@@ -231,8 +236,8 @@
         };
         return false;
     };
-
     function Rectangle(x , y , color , size , number){
+        this.rotation=0;
         this.x = x;
         this.y = y;
         this.shape = 0;
@@ -247,6 +252,7 @@
                         this.y = this.y + this.size;
                     break;
                     case "left":
+                    
                         if(this.x> 0){
                             this.x = this.x - this.size;
                         };
