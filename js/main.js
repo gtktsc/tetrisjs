@@ -1,10 +1,9 @@
  "use strict";
-
 (function() {
     var canvas = document.getElementById('canvas'),
         context = canvas.getContext('2d');
-
     var head =[];
+    var rotation=0;
     var color = "#"+((1<<24)*Math.random()|0).toString(16);
     var backgroundColor = "silver";
     var shape;
@@ -16,15 +15,8 @@
     var canvasHeight = document.getElementById('canvas-wrapper').offsetHeight;
     var sumX =Math.floor(canvasWidth / snakeSize);
     var sumY =Math.floor(canvasHeight  / snakeSize);
-
-
-
-    
     function restart(){
         setShape();
-
-
-
         var nr=0;
         for(var nrX=0;nrX<sumX;nrX++){
             for(var nrY=0;nrY<sumY;nrY++){
@@ -41,9 +33,8 @@
         clearInterval(animation);
         animation = setInterval(draw , 400);
     };
-
     function setShape(){
-        shape=Math.floor(Math.random() * (4));
+        shape=Math.floor(Math.random() * (5));
         color = "#"+((1<<24)*Math.random()|0).toString(16);
         switch(shape){
             case 0:
@@ -158,16 +149,12 @@
                 break;
         };
     };
-
-
-
     function resizeCanvas() {
         sumX =Math.floor(canvasWidth / snakeSize);
         sumY =Math.floor(canvasHeight / snakeSize);
         canvas.width = sumX * snakeSize;
         canvas.height = sumY * snakeSize;
     };
-
     function draw() {
         context.beginPath();
         context.clearRect(0 , 0 , canvasWidth , canvasHeight);
@@ -175,10 +162,6 @@
         context.fillStyle = backgroundColor;
         context.fill();
         context.closePath();
-
-
-
-
         for(var nr=0;nr<tileX.length;nr++){
             tileX[nr].draw();
         };
@@ -208,15 +191,160 @@
             break;
             case 83: // S
             case 40: // down
-            for(var tile in head){
-                head[tile].rotation +=1;
-            };
+            rotate();
             break;
         };
     });
-
+    function rotate(){
+        //to jest żart, należy to poprawić
+        rotation+=90;
+        if(rotation==360){
+            rotation=0;
+        };
+        switch(shape){
+            case 0:
+                switch(rotation){
+                    case 0:
+                        head[1].x=head[0].x+snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[1].x;
+                        head[2].y=head[1].y+snakeSize; 
+                        head[3].x=head[1].x+snakeSize;
+                        head[3].y=head[1].y+snakeSize; 
+                    break;
+                    case 90:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y+snakeSize; 
+                        head[2].x=head[1].x-snakeSize;
+                        head[2].y=head[1].y; 
+                        head[3].x=head[1].x-snakeSize;
+                        head[3].y=head[1].y+snakeSize; 
+                    break;
+                    case 180:
+                        head[1].x=head[0].x-snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[1].x;
+                        head[2].y=head[1].y-snakeSize; 
+                        head[3].x=head[1].x-snakeSize;
+                        head[3].y=head[1].y-snakeSize; 
+                    break;
+                    case 270:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y-snakeSize; 
+                        head[2].x=head[1].x+snakeSize;
+                        head[2].y=head[1].y; 
+                        head[3].x=head[2].x;
+                        head[3].y=head[1].y-snakeSize; 
+                    break;
+                };
+            break;
+            case 1:
+                switch(rotation){
+                    case 0:
+                        head[1].x=head[0].x+snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[0].x+snakeSize*2;
+                        head[2].y=head[0].y; 
+                    break;
+                    case 90:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y-snakeSize; 
+                        head[2].x=head[0].x;
+                        head[2].y=head[0].y-snakeSize*2; 
+                    break;
+                    case 180:
+                        head[1].x=head[0].x+snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[0].x+snakeSize*2;
+                        head[2].y=head[0].y; 
+                    break;
+                    case 270:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y-snakeSize; 
+                        head[2].x=head[0].x;
+                        head[2].y=head[0].y-snakeSize*2; 
+                    break;
+                };
+                break;
+                case 2:
+                switch(rotation){
+                    case 0:
+                        head[1].x=head[0].x+snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[0].x+snakeSize*2;
+                        head[2].y=head[0].y; 
+                        head[3].x=head[0].x;
+                        head[3].y=head[0].y+snakeSize; 
+                    break;
+                    case 90:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y+snakeSize; 
+                        head[2].x=head[0].x;
+                        head[2].y=head[0].y+snakeSize*2; 
+                        head[3].x=head[0].x-snakeSize;
+                        head[3].y=head[0].y; 
+                    break;
+                    case 180:
+                        head[1].x=head[0].x-snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[0].x-snakeSize*2;
+                        head[2].y=head[0].y; 
+                        head[3].x=head[0].x;
+                        head[3].y=head[0].y-snakeSize; 
+                    break;
+                    case 270:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y-snakeSize; 
+                        head[2].x=head[0].x;
+                        head[2].y=head[0].y-snakeSize*2; 
+                        head[3].x=head[0].x+snakeSize;
+                        head[3].y=head[0].y; 
+                    break;
+                };
+            break;
+            case 3:
+                switch(rotation){
+                    case 0:
+                        head[1].x=head[0].x+snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[0].x+snakeSize*2;
+                        head[2].y=head[0].y; 
+                        head[3].x=head[0].x+snakeSize;
+                        head[3].y=head[0].y+snakeSize; 
+                    break;
+                    case 90:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y-snakeSize; 
+                        head[2].x=head[0].x;
+                        head[2].y=head[0].y-snakeSize*2; 
+                        head[3].x=head[0].x-snakeSize;
+                        head[3].y=head[0].y-snakeSize; 
+                    break;
+                    case 180:
+                        head[1].x=head[0].x-snakeSize;
+                        head[1].y=head[0].y; 
+                        head[2].x=head[0].x-snakeSize*2;
+                        head[2].y=head[0].y; 
+                        head[3].x=head[0].x-snakeSize;
+                        head[3].y=head[0].y-snakeSize; 
+                    break;
+                    case 270:
+                        head[1].x=head[0].x;
+                        head[1].y=head[0].y-snakeSize; 
+                        head[2].x=head[0].x;
+                        head[2].y=head[0].y-snakeSize*2; 
+                        head[3].x=head[0].x+snakeSize;
+                        head[3].y=head[0].y-snakeSize; 
+                    break;
+                };
+            break;
+            case 4:
+            break;
+            //kiedyś
+        };
+    };
     function stop(){
-
+        rotation=0;
         for(var tile in head){
             for(var nr=0;nr<tileX.length;nr++){
                 if(tileX[nr].x==head[tile].x&&tileX[nr].y==head[tile].y){
@@ -227,7 +355,6 @@
         };
         setShape();
     };
-
     function touching(who){
         for(var nr=0;nr<tileOccupied.length;nr++){
             if(tileOccupied[nr].x==who.x && tileOccupied[nr].y==who.y+who.size){
@@ -268,14 +395,16 @@
             };
             context.beginPath();
             context.fillStyle = this.color;
+            context.save();
+            context.translate(head[0].x,head[0].y);
+            context.rotate(this.rotation* Math.PI/180);
+            context.translate(-head[0].x,-head[0].y);
             context.rect(this.x , this.y , this.size , this.size);
+            context.restore();
             context.fill();
             context.closePath();
         };
     };
-
-
     resizeCanvas();
-    restart();
-    
+    restart(); 
 })();
