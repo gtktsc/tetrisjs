@@ -4,6 +4,7 @@
         context = canvas.getContext('2d');
     var head =[];
     var rotation=0;
+    var tilesInRow=[];
     var color = "#"+((1<<24)*Math.random()|0).toString(16);
     var backgroundColor = "silver";
     var shape;
@@ -16,9 +17,12 @@
     var sumX =Math.floor(canvasWidth / snakeSize);
     var sumY =Math.floor(canvasHeight  / snakeSize);
     function restart(){
+        clearInterval(animation);
+        tileOccupied=[];
         setShape();
         var nr=0;
         for(var nrX=0;nrX<sumX;nrX++){
+            tilesInRow[nrX]=0;
             for(var nrY=0;nrY<sumY;nrY++){
             tileX[nr]= new Rectangle (snakeSize*nrX,
                                         snakeSize*nrY,
@@ -26,15 +30,16 @@
                                         snakeSize,
                                         nr);
             tileX[nr].direction="none";
+            tileX[nr].line=nrY;
             nr++;
             };
         };
 
-        clearInterval(animation);
-        animation = setInterval(draw , 400);
+        animation = setInterval(draw , 200);
     };
     function setShape(){
         shape=Math.floor(Math.random() * (5));
+        shape=1;
         color = "#"+((1<<24)*Math.random()|0).toString(16);
         switch(shape){
             case 0:
@@ -172,6 +177,9 @@
         }
         for(var tile in head){
             head[tile].draw();
+        };
+        for(var tile in tileOccupied){
+            tileOccupied[tile].draw();
         };
     };
     window.addEventListener('resize' , resizeCanvas , false);
@@ -348,13 +356,36 @@
         for(var tile in head){
             for(var nr=0;nr<tileX.length;nr++){
                 if(tileX[nr].x==head[tile].x&&tileX[nr].y==head[tile].y){
-                    tileX[nr].color=head[tile].color;
-                    tileOccupied[tileOccupied.length] = tileX[nr];
+                    tileOccupied[tileOccupied.length]=new Rectangle (tileX[nr].x , tileX[nr].y , head[tile].color , snakeSize , tileOccupied.length);
+                    tileOccupied[tileOccupied.length-1].line=tileX[nr].line;
+                    tileOccupied[tileOccupied.length-1].direction="none";
+                    tilesInRow[tileX[nr].line]++;
+                    if(tileX[nr].y==snakeSize){
+                        restart();
+                    };
                 };
             };
         };
+        checkLine();
         setShape();
     };
+    function checkLine(){
+        for(var line in tilesInRow){
+            if(tilesInRow[line]==sumX){
+                tilesInRow[line]=0;
+                renum();
+                for(var tile in tileOccupied){
+                    tileOccupied[tile].y+=snakeSize;
+                    tileOccupied[tile].line--;
+                };
+            };
+        };
+    };
+    function renum(){
+        for(var nr=sumY;nr>=0;nr--){
+            tilesInRow[nr]=tilesInRow[nr-1];
+        };
+    }
     function touching(who){
         for(var nr=0;nr<tileOccupied.length;nr++){
             if(tileOccupied[nr].x==who.x && tileOccupied[nr].y==who.y+who.size){
@@ -372,6 +403,7 @@
         this.number = number;
         this.size = size;
         this.color = color;
+        this.line=-1;
         this.draw = function() {
             if(this.direction!="none"){
                 switch(this.direction){
