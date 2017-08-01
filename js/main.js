@@ -7,8 +7,12 @@
     var backgroundTile=[];
     var tileOccupied=[];
     var rotation=0;
-    var color = "#"+((1<<24)*Math.random()|0).toString(16);
-    var backgroundColor = "silver";
+    var direction="none";
+    var color;
+    var moveable=true;
+    var backgroundColor = "white";
+    var backgroundLine =12;
+    var backgroundLineColor = "#505A69";
     var shape;
     var tileSize = 30;
     var animation;
@@ -34,7 +38,23 @@
     };
     function setShape(){
         shape=Math.floor(Math.random() * (5));
-        color = "#"+((1<<24)*Math.random()|0).toString(16);
+        switch(Math.floor(Math.random() * (5))){
+            case 0:
+                color = "#FA575C";
+            break;
+            case 1:
+                color = "#47ADA0";
+            break;
+            case 2:
+                color = "#8F63BF";
+            break;
+            case 3:
+                color = "#FFC90A";
+            break;
+            case 4:
+                color = "#FF823B";
+            break;
+        };
         tetrimino=[];
         var centerX= (Math.floor(canvasWidth / tileSize)/2)* tileSize;
         switch(shape){
@@ -99,9 +119,9 @@
             backgroundTile[nr].draw();
         };
         for(var tile in tetrimino){
-            if(tetrimino[tile]!=undefined && (tetrimino[tile].y > canvasHeight-tileSize * 2 || touching(tetrimino[tile])  )){
+            if(tetrimino[tile]!=undefined && (tetrimino[tile].y > canvasHeight-tileSize * 2 || touchingBottom(tetrimino[tile])  )){
                 stop();
-                console.log("touching true");
+                console.log("touchingBottom true");
             };
         }
         for(var tile in tetrimino){
@@ -116,15 +136,13 @@
         switch (event.keyCode) {
             case 68: // D
             case 39: // down
-                for(var tile in tetrimino){
-                    tetrimino[tile].direction = "right";
-                };
+                direction = "right";
+                touchingSide();
             break;
             case 65: // A
             case 37: // left
-            for(var tile in tetrimino){
-                    tetrimino[tile].direction = "left";
-            };
+                direction = "left";
+                touchingSide();
             break;
             case 83: // S
             case 40: // down
@@ -133,11 +151,7 @@
         };
     });
     function rotate(){
-        //to jest żart, należy to poprawić
-        rotation+=90;
-        if(rotation==360){
-            rotation=0;
-        };
+        rotation===360?rotation=0:rotation+=90
         switch(shape){
             case 0:
                 switch(rotation){
@@ -325,7 +339,42 @@
             tilesInRow[nr]=tilesInRow[nr-1];
         };
     }
-    function touching(who){
+    function touchingBottom(who){
+        for(var nr=0;nr<tileOccupied.length;nr++){
+            if(tileOccupied[nr].x==who.x && tileOccupied[nr].y==who.y+tileSize){
+                console.log("asd")
+                return true;
+            };
+        };
+        return false;
+    };
+    function touchingSide(){
+        if(direction === "left"){
+            for(var tile in tetrimino){
+                if (tetrimino[tile].x === 0) return moveable=false;
+                for(var nr=0;nr<tileOccupied.length;nr++){
+                    if(( tileOccupied[nr].x==tetrimino[tile].x-tileSize && tileOccupied[nr].y==tetrimino[tile].y) ){
+                        return moveable=false;
+                    }
+                };
+            };
+        }else if(direction === "right"){
+            for(var tile in tetrimino){
+                if (tetrimino[tile].x=== sumX * tileSize-tileSize) return moveable=false;
+                for(var nr=0;nr<tileOccupied.length;nr++){
+                    if((tileOccupied[nr].x==tetrimino[tile].x+tileSize && tileOccupied[nr].y==tetrimino[tile].y )){
+                        return moveable=false;
+                    }
+                };
+            };
+        }
+
+        for(var tile in tetrimino){
+            tetrimino[tile].direction=direction;
+        };
+        return moveable=true;
+    };
+    function touchingBottom(who){
         for(var nr=0;nr<tileOccupied.length;nr++){
             if(tileOccupied[nr].x==who.x && tileOccupied[nr].y==who.y+tileSize){
                 console.log("asd")
@@ -345,29 +394,33 @@
         this.line=-1;
         this.who="backgroundTile";
         this.draw = function() {
-            if(this.who="tetrimino"){
+            context.beginPath();
+            context.fillStyle = this.color;
+            if(this.who==="tetrimino"){
                 if(this.direction ==="down"){
                     this.y = this.y + tileSize;
                 };
-            };
-            switch(this.direction){
+                switch(this.direction){
                 case "left":
-                    if(this.x> 0){
+                    if(this.x> 0 && moveable){
                         this.x = this.x - tileSize;
                     };
                     this.direction="down";
                 break;
                 case "right":
-                    if(this.x< sumX * tileSize-tileSize){
+                    if(this.x< sumX * tileSize-tileSize && moveable){
                         this.x = this.x + tileSize;
                     };
                     this.direction="down";
                 break;
+                };
+                context.rect(this.x , this.y , tileSize , tileSize);
+            } else if(this.who==="backgroundTile"){
+                context.fillStyle = backgroundLineColor;
+                context.rect(this.x+backgroundLine , this.y+backgroundLine , tileSize-backgroundLine*2 , tileSize-backgroundLine*2);
+            }else{
+                context.rect(this.x , this.y , tileSize , tileSize);
             };
-
-            context.beginPath();
-            context.fillStyle = this.color;
-            context.rect(this.x , this.y , tileSize , tileSize);
             context.fill();
             context.closePath();
         };
