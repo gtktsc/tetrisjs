@@ -2,30 +2,31 @@
 (function() {
     var canvas = document.getElementById('canvas'),
         context = canvas.getContext('2d');
+    var canvasWidth = document.getElementById('canvas-wrapper').offsetWidth;
+    var canvasHeight = document.getElementById('canvas-wrapper').offsetHeight;
     var tetrimino =[];
     var tilesInRow=[];
     var backgroundTile=[];
     var tileOccupied=[];
+    var tileSize = Math.floor(canvasWidth/30);
     var rotation=0;
     var direction="none";
     var color;
     var moveable=true;
     var backgroundColor = "white";
-    var backgroundLine =12;
+    var backgroundLine = tileSize/3;
     var backgroundLineColor = "#505A69";
     var shape;
-    var tileSize = 30;
     var animation;
-    var canvasWidth = document.getElementById('canvas-wrapper').offsetWidth;
-    var canvasHeight = document.getElementById('canvas-wrapper').offsetHeight;
+    var restartTimer;
+
     var sumX = (Math.floor(canvasWidth / tileSize)%2==0?sumX = Math.floor(canvasWidth / tileSize) : sumX = Math.floor(canvasWidth / tileSize)-1);
     var sumY =Math.floor(canvasHeight  / tileSize);
-    console.log(sumX)
     function restart(){
         clearInterval(animation);
-        tileOccupied=[];
-        setShape();
+        clearTimeout(restartTimer);
         var nr=0;
+        tileOccupied=[];
         for(var nrX=0;nrX<sumX;nrX++){
             tilesInRow[nrX]=0;
             for(var nrY=0;nrY<sumY;nrY++){
@@ -35,7 +36,12 @@
             nr++;
             };
         };
-        animation = setInterval(draw , 200);
+        setShape();
+        context.clearRect(0 , 0 , canvasWidth , canvasHeight);
+        drawBackground();
+        restartTimer=setTimeout(function(){         
+            tileOccupied.length = 0;
+            animation = setInterval(draw , 200); }, 3000);
     };
     function setShape(){
         shape=Math.floor(Math.random() * (5));
@@ -57,46 +63,46 @@
             break;
         };
         tetrimino=[];
-        var centerX= Math.floor(sumX/2)* tileSize;
+        var centerX= (Math.floor(sumX/2)-1) * tileSize;
         switch(shape){
             case 0:
             // xx
             //  xx
-                tetrimino[0] = new Rectangle ( centerX ,0,color ,-1);
-                tetrimino[1] = new Rectangle ( centerX +tileSize,0,color ,-1);
-                tetrimino[2] = new Rectangle ( centerX +tileSize,tileSize,color ,-1);
-                tetrimino[3] = new Rectangle ( centerX +tileSize*2,+tileSize,color ,-1);
+                tetrimino[0] = new Rectangle ( centerX ,-tileSize,color ,-1);
+                tetrimino[1] = new Rectangle ( centerX +tileSize,-tileSize,color ,-1);
+                tetrimino[2] = new Rectangle ( centerX +tileSize,0,color ,-1);
+                tetrimino[3] = new Rectangle ( centerX +tileSize*2,0,color ,-1);
                 break;
             case 1:
             // xxxx
-                tetrimino[0] = new Rectangle ( centerX ,0,color ,-1);
-                tetrimino[1] = new Rectangle ( centerX +tileSize,0,color ,-1);
-                tetrimino[2] = new Rectangle ( centerX + tileSize*2,0,color ,-1);
-                tetrimino[3] = new Rectangle ( centerX + tileSize*3,0,color ,-1);
+                tetrimino[0] = new Rectangle ( centerX ,-tileSize,color ,-1);
+                tetrimino[1] = new Rectangle ( centerX +tileSize,-tileSize,color ,-1);
+                tetrimino[2] = new Rectangle ( centerX + tileSize*2,-tileSize,color ,-1);
+                tetrimino[3] = new Rectangle ( centerX + tileSize*3,-tileSize,color ,-1);
             break;
             case 2:
             // xxx
             // x
-                tetrimino[0] = new Rectangle ( centerX ,0,color ,tileSize ,-1);
-                tetrimino[1] = new Rectangle ( centerX +tileSize, 0,color ,tileSize ,-1);
-                tetrimino[2] = new Rectangle ( centerX + tileSize*2,0,color ,tileSize ,-1);
-                tetrimino[3] = new Rectangle ( centerX ,tileSize,color ,tileSize ,-1);
+                tetrimino[0] = new Rectangle ( centerX ,-tileSize,color ,tileSize ,-1);
+                tetrimino[1] = new Rectangle ( centerX +tileSize, -tileSize,color ,tileSize ,-1);
+                tetrimino[2] = new Rectangle ( centerX + tileSize*2,-tileSize,color ,tileSize ,-1);
+                tetrimino[3] = new Rectangle ( centerX ,0,color ,tileSize ,-1);
                 break;
             case 3:
             // xxx
             //  x
-                tetrimino[0] = new Rectangle ( centerX ,0,color ,tileSize ,-1);
-                tetrimino[1] = new Rectangle ( centerX +tileSize,0,color ,tileSize ,-1);
-                tetrimino[2] = new Rectangle ( centerX + tileSize*2,0,color ,-1);
-                tetrimino[3] = new Rectangle ( centerX +tileSize,tileSize,color ,-1);
+                tetrimino[0] = new Rectangle ( centerX ,-tileSize,color ,tileSize ,-1);
+                tetrimino[1] = new Rectangle ( centerX +tileSize,-tileSize,color ,tileSize ,-1);
+                tetrimino[2] = new Rectangle ( centerX + tileSize*2,-tileSize,color ,-1);
+                tetrimino[3] = new Rectangle ( centerX +tileSize,0,color ,-1);
                 break;
             case 4:
             // xx
             // xx
-                tetrimino[0] = new Rectangle ( centerX ,0,color ,-1);
-                tetrimino[1] = new Rectangle ( centerX +tileSize,0, color ,-1);
-                tetrimino[2] = new Rectangle ( centerX , tileSize,color ,-1);
-                tetrimino[3] = new Rectangle ( centerX +tileSize,tileSize,color ,-1);
+                tetrimino[0] = new Rectangle ( centerX ,-tileSize,color ,-1);
+                tetrimino[1] = new Rectangle ( centerX +tileSize,-tileSize, color ,-1);
+                tetrimino[2] = new Rectangle ( centerX , 0,color ,-1);
+                tetrimino[3] = new Rectangle ( centerX +tileSize,0,color ,-1);
                 break;
         };
         for(var tile in tetrimino){
@@ -104,11 +110,19 @@
         };
     };
     function resizeCanvas() {
+        canvasWidth = document.getElementById('canvas-wrapper').offsetWidth;
+        canvasHeight = document.getElementById('canvas-wrapper').offsetHeight;
         sumX = (Math.floor(canvasWidth / tileSize)%2==0?sumX = Math.floor(canvasWidth / tileSize) : sumX = Math.floor(canvasWidth / tileSize)-1);
         sumY =Math.floor(canvasHeight / tileSize);
         canvas.width = sumX * tileSize;
         canvas.height = sumY * tileSize;
+        restart();
     };
+    function drawBackground(){
+        for(var nr=0;nr<backgroundTile.length;nr++){
+            backgroundTile[nr].draw();
+        };
+    }
     function draw() {
         context.beginPath();
         context.clearRect(0 , 0 , canvasWidth , canvasHeight);
@@ -116,21 +130,19 @@
         context.fillStyle = backgroundColor;
         context.fill();
         context.closePath();
-        for(var nr=0;nr<backgroundTile.length;nr++){
-            backgroundTile[nr].draw();
-        };
+        drawBackground();
         for(var tile in tetrimino){
             if(tetrimino[tile]!=undefined && (tetrimino[tile].y > canvasHeight-tileSize * 2 || touchingBottom(tetrimino[tile])  )){
                 stop();
-                console.log("touchingBottom true");
             };
         }
-        for(var tile in tetrimino){
-            tetrimino[tile].draw();
-        };
         for(var tile in tileOccupied){
             tileOccupied[tile].draw();
         };
+        for(var tile in tetrimino){
+            tetrimino[tile].draw();
+        };
+
     };
     window.addEventListener('resize' , resizeCanvas , false);
     window.addEventListener('keydown', function(event) {
@@ -300,7 +312,6 @@
             break;
             case 4:
             break;
-            //kiedyś
         };
     };
     function stop(){
@@ -313,7 +324,6 @@
                     tileOccupied[tileOccupied.length-1].direction="none";
                     tileOccupied[tileOccupied.length-1].who="tileOccupied";
                     tilesInRow[backgroundTile[nr].line]++;
-                    console.log("stop function");
                     if(backgroundTile[nr].y==tileSize){
                         restart();
                     };
@@ -343,7 +353,6 @@
     function touchingBottom(who){
         for(var nr=0;nr<tileOccupied.length;nr++){
             if(tileOccupied[nr].x==who.x && tileOccupied[nr].y==who.y+tileSize){
-                console.log("asd")
                 return true;
             };
         };
@@ -378,7 +387,6 @@
     function touchingBottom(who){
         for(var nr=0;nr<tileOccupied.length;nr++){
             if(tileOccupied[nr].x==who.x && tileOccupied[nr].y==who.y+tileSize){
-                console.log("asd")
                 return true;
             };
         };
