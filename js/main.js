@@ -18,8 +18,9 @@
     var animation;
     var canvasWidth = document.getElementById('canvas-wrapper').offsetWidth;
     var canvasHeight = document.getElementById('canvas-wrapper').offsetHeight;
-    var sumX =Math.floor(canvasWidth / tileSize);
+    var sumX = (Math.floor(canvasWidth / tileSize)%2==0?sumX = Math.floor(canvasWidth / tileSize) : sumX = Math.floor(canvasWidth / tileSize)-1);
     var sumY =Math.floor(canvasHeight  / tileSize);
+    console.log(sumX)
     function restart(){
         clearInterval(animation);
         tileOccupied=[];
@@ -56,7 +57,7 @@
             break;
         };
         tetrimino=[];
-        var centerX= (Math.floor(canvasWidth / tileSize)/2)* tileSize;
+        var centerX= Math.floor(sumX/2)* tileSize;
         switch(shape){
             case 0:
             // xx
@@ -103,7 +104,7 @@
         };
     };
     function resizeCanvas() {
-        sumX =Math.floor(canvasWidth / tileSize);
+        sumX = (Math.floor(canvasWidth / tileSize)%2==0?sumX = Math.floor(canvasWidth / tileSize) : sumX = Math.floor(canvasWidth / tileSize)-1);
         sumY =Math.floor(canvasHeight / tileSize);
         canvas.width = sumX * tileSize;
         canvas.height = sumY * tileSize;
