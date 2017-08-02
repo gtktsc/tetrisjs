@@ -19,9 +19,9 @@
     var shape;
     var animation;
     var restartTimer;
-
     var sumX = (Math.floor(canvasWidth / tileSize)%2==0?sumX = Math.floor(canvasWidth / tileSize) : sumX = Math.floor(canvasWidth / tileSize)-1);
     var sumY =Math.floor(canvasHeight  / tileSize);
+    
     function restart(){
         clearInterval(animation);
         clearTimeout(restartTimer);
@@ -144,25 +144,6 @@
         };
 
     };
-    window.addEventListener('resize' , resizeCanvas , false);
-    window.addEventListener('keydown', function(event) {
-        switch (event.keyCode) {
-            case 68: // D
-            case 39: // down
-                direction = "right";
-                touchingSide();
-            break;
-            case 65: // A
-            case 37: // left
-                direction = "left";
-                touchingSide();
-            break;
-            case 83: // S
-            case 40: // down
-            rotate();
-            break;
-        };
-    });
     function rotate(){
         rotation===360?rotation=0:rotation+=90
         switch(shape){
@@ -434,6 +415,25 @@
             context.closePath();
         };
     };
+    window.addEventListener('resize' , resizeCanvas , false);
+    window.addEventListener('keydown', function(event) {
+        switch (event.keyCode) {
+            case 68: // D
+            case 39: // down
+                direction = "right";
+                touchingSide();
+            break;
+            case 65: // A
+            case 37: // left
+                direction = "left";
+                touchingSide();
+            break;
+            case 83: // S
+            case 40: // down
+            rotate();
+            break;
+        };
+    });
     resizeCanvas();
     restart(); 
 })();
