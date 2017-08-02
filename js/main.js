@@ -41,7 +41,7 @@
         drawBackground();
         restartTimer=setTimeout(function(){         
             tileOccupied.length = 0;
-            animation = setInterval(draw , 200); }, 3000);
+            animation = setInterval(draw , 200); }, 500);
     };
     function setShape(){
         shape=Math.floor(Math.random() * (5));
@@ -145,7 +145,7 @@
 
     };
     function rotate(){
-        rotation===360?rotation=0:rotation+=90
+        rotation===270?rotation=0:rotation+=90
         switch(shape){
             case 0:
                 switch(rotation){
@@ -430,6 +430,8 @@
             break;
             case 83: // S
             case 40: // down
+            case 87: // W
+            case 38: // up
             rotate();
             break;
         };
